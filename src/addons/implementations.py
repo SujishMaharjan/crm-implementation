@@ -67,11 +67,18 @@ class CapsuleCrmPlugin:
 
 
     @hookimpl
-    def get_resource(): ...
+    async def get_contacts(self,name,access_token):
+        if name == "capsulecrm":
+            headers = {"Authorization": f"Bearer {access_token}"}
+
+            async with httpx.AsyncClient() as client:
+                response = await client.get("https://api.capsulecrm.com/api/v2/parties", headers=headers)
+            return response.json()
+            
 
 
 
-def get_plugin_manager():
+def init_plugin_manager():
     pm = pluggy.PluginManager("CRMS")
     pm.add_hookspecs(CrmSpec)
     pm.register(CapsuleCrmPlugin())

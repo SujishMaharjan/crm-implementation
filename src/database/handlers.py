@@ -2,6 +2,7 @@ import secrets
 from datetime import datetime, timedelta
 from src.database.queries import write_json,read_json
 from fastapi.responses import JSONResponse
+from src.core.exceptions import *
 
 
 
@@ -32,5 +33,10 @@ def check_valid_state(state):
         return JSONResponse(content={"detail":"State is Expired"})
     return True
 
+
+def save_token_date(file_name,data):
+    if not write_json(file_name,data):
+        raise UnableToSaveException
+    return True
     
 
