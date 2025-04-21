@@ -1,0 +1,34 @@
+[project]
+name = "crm-implementation"
+version = "0.1.0"
+description = "Add your description here"
+authors = [
+    { name = "SujishMaharjan", email = "sujishmaharjan@gmail.com" }
+]
+dependencies = [
+    "fastapi[standard]>=0.115.12",
+    "pluggy==0.12.0",
+    "pydantic-settings>=2.8.1",
+    "sqlalchemy>=2.0.40",
+    "psycopg2>=2.9.10",
+    "httpx>=0.28.1",
+]
+readme = "README.md"
+requires-python = ">= 3.8"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = []
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/crm_implementation"]
+
+[tool.rye.scripts]
+main = "fastapi dev src/api/main.py"
