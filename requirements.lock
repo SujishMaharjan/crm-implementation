@@ -16,16 +16,24 @@ anyio==4.9.0
     # via httpx
     # via starlette
     # via watchfiles
+astroid==3.3.9
+    # via pylint
+black==25.1.0
+    # via crm-implementation
 certifi==2025.1.31
     # via httpcore
     # via httpx
 click==8.1.8
+    # via black
     # via rich-toolkit
     # via typer
     # via uvicorn
 colorama==0.4.6
     # via click
+    # via pylint
     # via uvicorn
+dill==0.4.0
+    # via pylint
 dnspython==2.7.0
     # via email-validator
 email-validator==2.2.0
@@ -52,14 +60,27 @@ idna==3.10
     # via httpx
 importlib-metadata==8.6.1
     # via pluggy
+isort==6.0.1
+    # via pylint
 jinja2==3.1.6
     # via fastapi
 markdown-it-py==3.0.0
     # via rich
 markupsafe==3.0.2
     # via jinja2
+mccabe==0.7.0
+    # via pylint
 mdurl==0.1.2
     # via markdown-it-py
+mypy-extensions==1.0.0
+    # via black
+packaging==25.0
+    # via black
+pathspec==0.12.1
+    # via black
+platformdirs==4.3.7
+    # via black
+    # via pylint
 pluggy==0.12.0
     # via crm-implementation
 psycopg2==2.9.10
@@ -73,6 +94,8 @@ pydantic-settings==2.8.1
     # via crm-implementation
 pygments==2.19.1
     # via rich
+pylint==3.3.6
+    # via crm-implementation
 python-dotenv==1.1.0
     # via pydantic-settings
     # via uvicorn
@@ -93,6 +116,8 @@ sqlalchemy==2.0.40
     # via crm-implementation
 starlette==0.46.2
     # via fastapi
+tomlkit==0.13.2
+    # via pylint
 typer==0.15.2
     # via fastapi-cli
 typing-extensions==4.13.2

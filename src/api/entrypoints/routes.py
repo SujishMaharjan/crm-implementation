@@ -1,91 +1,61 @@
-from fastapi import APIRouter,Request,Depends
-from typing import Literal,Annotated
-from src.addons.implementations import *
-from src.database.handlers import generate_state
-from src.core.dependencies import AnnotatedPm
-from src.database.queries import read_json
-from fastapi.security import OAuth2PasswordBearer
+import asyncio
+from fastapi import APIRouter, Request
+from src.addons.integrations.plugins.capsule import *
+from src.core.dependencies import AnnotatedPm, AnnotatedClientId,AnnotatedSettings
+from src.modules.handlers import save_token_data, get_access_token_from_header,save_contacts
+from src.config.settings import AppSettings
+from src.modules.queries import read_json, write_json
 from src.core.exceptions import *
 
-# oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/intergrations/token")
-
-
-
-router = APIRouter(
-    prefix="/intergrations",
-    tags = ["Integrations"]
-)
-
-
+router = APIRouter(prefix="/intergrations", tags=["Integrations"])
 
 
 @router.get("/")
 async def get_authorization_url(
-    request: Request,
-    pm: AnnotatedPm,
-    name: Literal["copper", "capsulecrm"]
+    request: Request, pm: AnnotatedPm,settings: AnnotatedSettings, name: str | None = None
 ):
 
-    pm = request.app.state.pm
-    # breakpoint()
-    url = pm.hook.get_crm_authorization_url(
+    tasks = pm.hook.get_crm_authorization_url(
         name=name,
-        response_type="code",
-        client_id=request.app.state.settings.crmconfig.client_id,
-        scope="read write",
-        state=generate_state()
-        )
-    return {"authorization_url":url}
-
-
-
+        settings=settings
+    )
+    
+    url = await asyncio.gather(*tasks)
+    return {"authorization_url": url}
 
 
 @router.get("/token/")
 async def get_users_token(
-    request:Request,
-    user_name: str,
-    ):
+    request: Request,
+    sub_domain: str,
+):
     print("token endpoint")
-    # breakpoint()
     json_data = read_json("tokens.json")
-    access_token = json_data.get(user_name, None).get("access_token")
-    if not access_token:
+    data = json_data.get(sub_domain, None)
+    if not data:
         raise InvalidUserException("Invalid User")
-    
-    return {"access_token": access_token.get("access_token")}
 
-
-
-    
-
-
-
-
+    return {"access_token": data.get("access_token")}
 
 
 @router.get("/contacts/")
 async def get_contact_resource(
-    request:Request,
-    pm:AnnotatedPm,
-    name: str
+    request: Request,
+    pm: AnnotatedPm,
+    settings: AnnotatedSettings,
+    name: str,
+    page: int,
+    perPage: int
 ):
-    auth_header = request.headers.get("Authorization")
-    if not auth_header or not auth_header.startswith("Bearer"):
-        raise InvalidTokenException("Invalid Token")
-    access_token  = auth_header.removeprefix("Bearer ").strip()
-
-    results = pm.hook.get_contacts(
+    access_token = get_access_token_from_header(request)
+    tasks = pm.hook.get_contacts(
         name=name,
-        access_token=access_token)
-    token_response = [await result for result in results]
-    return token_response[0]
-    
-    
-    
+        settings=settings,
+        access_token=access_token,
+        page=page,
+        perPage=perPage
+    )
+    contacts=await asyncio.gather(*tasks)
 
-
-
-
-
-
+    save_contacts("contacts.json", contacts)
+    return contacts
