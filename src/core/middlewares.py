@@ -1,7 +1,9 @@
+import asyncio
 from starlette.middleware.base import BaseHTTPMiddleware
 from fastapi import Request
 from src.core.exceptions import *
 from fastapi.responses import JSONResponse
+from src.utils.state_manager import clean_expire_states
 
 
 class ExceptionMiddleware(BaseHTTPMiddleware):
@@ -19,3 +21,13 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
             return JSONResponse(status_code=401, content={"detail": str(e)})
         except InvalidTokenException as e:
             return JSONResponse(status_code=401, content={"detail": str(e)})
+        
+
+class CleanUpStatesMiddleware(BaseHTTPMiddleware):
+    def __init__(self, app):
+        super().__init__(app)
+        self.clean_up = asyncio.create_task(clean_expire_states())
+
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        return response

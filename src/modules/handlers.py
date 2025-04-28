@@ -50,34 +50,55 @@ def save_state_data(filename,data):
     write_json(filename, json_db_data)
     return True
 
-def save_token_data(filename, datas):
-    json_db_data = read_json(filename)
+def save_token_data(filename,datas):
+    tokens = read_json(filename)
     for data in datas:
-        json_db_data[data["subdomain"]]= data
-    write_json(filename, json_db_data)
+        if data is None:
+            continue
+        sub_domain=data.get("crm_subdomain")
+        crm_name=data.get("crm_name")
+        if crm_name not in tokens:
+            tokens[crm_name] = {}
+        tokens[crm_name][sub_domain] = data
+    write_json(filename, tokens)
     return True
+# def save_token_data(filename,name,datas):
+#     json_db_data = read_json(filename)
+#     for data in datas:
+#         json_db_data[name]=data
+#     write_json(filename, json_db_data)
+#     return True
+
 
 def save_contacts(filename, datas):
     json_db_data = read_json(filename)
     for data in datas:
+        if data is None:
+            continue
         json_db_data.update(data)
     write_json(filename, json_db_data)
     return True
+# def save_contacts(filename, datas):
+#     json_db_data = read_json(filename)
+#     for data in datas:
+#         json_db_data.update(data)
+#     write_json(filename, json_db_data)
+#     return True
 
 
 
-def get_refresh_token(access_token):
+def get_refresh_token(name,access_token):
 
     json_data = read_json("tokens.json")
-    token_data = next((sub_dict for sub_dict in json_data.values() if sub_dict["access_token"] == access_token), None)
+    token_data = next((sub_dict for sub_dict in json_data[name].values() if sub_dict["access_token"] == access_token), None)
     if not token_data:
         raise InvalidTokenException("Invalid Token")
     return token_data.get("refresh_token")
 
 
-def check_if_access_token_expired(access_token)-> bool:
+def check_if_access_token_expired(crm_name,access_token)-> bool:
     json_data = read_json("tokens.json")
-    data = next((sub_dict for sub_dict in json_data.values() if sub_dict["access_token"] == access_token), None)
+    data = next((sub_dict for sub_dict in json_data[crm_name].values() if sub_dict["access_token"] == access_token), None)
     if not data:
         raise InvalidTokenException("Invalid Token")
     current_time = datetime.utcnow()
@@ -91,11 +112,11 @@ def create_current_expiry_time_timedate_format(seconds):
     return expiry_time.isoformat()
 
 
-def update_token_data(access_token_data)->bool:
+def update_token_data(name,access_token_data)->bool:
     access_token_data["created_at"]=datetime.utcnow().isoformat()
     json_data = read_json("tokens.json")
     sub_domain = access_token_data.get("subdomain", None)
-    json_data[sub_domain] = access_token_data
+    json_data[name][sub_domain] = access_token_data
     write_json("tokens.json", json_data)
     return True
 
@@ -103,3 +124,11 @@ def update_token_data(access_token_data)->bool:
 def generate_state():
     state = "".join(random.choices(string.ascii_letters + string.digits, k=32))
     return state
+
+def fetch_access_token_by_subdomain(crm_name,sub_domain):
+    json_db_data = read_json("tokens.json")
+    return json_db_data[crm_name][sub_domain]["access_token"]
+
+
+
+

@@ -1,4 +1,4 @@
-import pluggy, httpx, asyncio
+import pluggy, httpx, asyncio, base64
 from datetime import datetime
 from fastapi.responses import RedirectResponse
 from urllib.parse import urlencode
@@ -18,54 +18,58 @@ from src.addons.integrations.plugins import hookimpl
 
 
 
-class CapsuleCrmPlugin:
+class PipedriveCrmPlugin:
 
     @hookimpl
     async def get_crm_authorization_url(self, name, settings: AppSettings):
-        if name == "capsulecrm" or name == None:
-            base_url = "https://api.capsulecrm.com/oauth/authorise"
+        if name == "pipedrivecrm" or name == None:
+            base_url = "https://oauth.pipedrive.com/oauth/authorize"
             state = generate_store_state()
             params = {
-                "response_type": "code",
-                "client_id": settings.capsule.client_id,
-                "redirect_uri": f"http://localhost:8000/callbacks/integrations/capsulecrm",
-                "scope": "read write",
+                "client_id": settings.pipedrive.client_id,
+                "redirect_uri": f"http://localhost:8000/callbacks/integrations/pipedrivecrm",
                 "state": state,
             }
             query_string = urlencode(params)
             full_uri = f"{base_url}?{query_string}"
 
-            return {"capsulecrm": full_uri}
-
+            return {"pipedrivecrm": full_uri}
+        
     @hookimpl
     async def get_access_token(self, name, code, state, settings: AppSettings):
-        if name == "capsulecrm":
+        if name == "pipedrivecrm" or name == None:
 
             check_valid_state(state)
-
-            token_url = "https://api.capsulecrm.com/oauth/token"
-            headers = {"Content-Type": "application/x-www-form-urlencoded"}
+            
+            auth_string = f"{settings.pipedrive.client_id}:{settings.pipedrive.client_secret}"
+            b64_auth_string = base64.b64encode(auth_string.encode()).decode()
+            token_url = "https://oauth.pipedrive.com/oauth/token"
+            headers = {"Content-Type": "application/x-www-form-urlencoded",
+                       "Authorization":f"Basic {b64_auth_string}"
+                       }
 
             data = {
-                "code": code,
-                "client_id": settings.capsule.client_id,
                 "grant_type": "authorization_code",
+                "code": code,
+                "redirect_uri": f"http://localhost:8000/callbacks/integrations/pipedrivecrm",
             }
 
             async with httpx.AsyncClient() as client:
+
                 response = await client.post(token_url, data=data, headers=headers)
                 response.raise_for_status()
                 response_data = response.json()
                 response_data["created_at"] = datetime.utcnow().isoformat()
-                response_data["crm_subdomain"] = response_data["subdomain"]
+                response_data["crm_subdomain"] = response_data["api_domain"]
                 response_data["crm_name"] = name
                 return response_data
+            
 
     @hookimpl
     async def get_contacts(
         self, name, settings: AppSettings, access_token, page, perPage
     ):
-        if name == "capsulecrm":
+        if name == "pipedrivecrm" or name == None:
 
             if check_if_access_token_expired(crm_name=name,access_token=access_token):
 
@@ -73,7 +77,7 @@ class CapsuleCrmPlugin:
                     self.regenerate_access_token(
                         name=name,
                         refresh_token=get_refresh_token(name,access_token),
-                        client_id=settings.capsule.client_id,
+                        settings=settings,
                     )
                 )
         
@@ -81,24 +85,27 @@ class CapsuleCrmPlugin:
                 access_token = access_token_data[0].get("access_token")
 
             headers = {"Authorization": f"Bearer {access_token}"}
-            base_url = "https://api.capsulecrm.com/api/v2/parties"
+            base_url = "https://sujish-sandbox.pipedrive.com/users/me"
             params = {"page": page, "perPage": perPage}
             url = f"{base_url}?{urlencode(params)}"
-
             async with httpx.AsyncClient() as client:
                 response = await client.get(url=url, headers=headers)
-                return {name:response.json()}
 
+                return {name:response.json()}
+            
     @hookimpl
     async def regenerate_access_token(self, name, refresh_token, settings:AppSettings):
         token_url = "https://api.capsulecrm.com/oauth/token"
 
-        headers = {"Content-Type": "application/x-www-form-urlencoded"}
-
+        auth_string = f"{settings.pipedrive.client_id}:{settings.pipedrive.client_secret}"
+        b64_auth_string = base64.b64encode(auth_string.encode()).decode()
+        token_url = "https://oauth.pipedrive.com/oauth/token"
+        headers = {"Content-Type": "application/x-www-form-urlencoded",
+                    "Authorization":f"Basic {b64_auth_string}"
+                    }
         data = {
-            "refresh_token": refresh_token,
-            "client_id": settings.capsule.client_id,
             "grant_type": "refresh_token",
+            "refresh_token": refresh_token, 
         }
 
         async with httpx.AsyncClient() as client:
