@@ -1,192 +1,148 @@
 {
-    "parties": [
-        {
-            "id": 270051500,
-            "owner": {
-                "id": 678903,
-                "deleted": false,
-                "username": "sam",
-                "pictureURL": "https://facehub.appspot.com/default/person?text=SS&size=100&colour=-909703756",
-                "name": "sam SSS"
-            },
-            "team": null,
-            "type": "person",
-            "about": null,
-            "firstName": "sam",
-            "lastName": "SSS",
-            "jobTitle": null,
-            "createdAt": "2025-04-22T01:47:53Z",
-            "updatedAt": "2025-04-22T01:47:53Z",
-            "organisation": null,
-            "lastContactedAt": null,
-            "title": null,
-            "pictureURL": "https://facehub.appspot.com/default/person?text=SS&size=100&colour=-909703756",
-            "enrichment": null,
-            "phoneNumbers": [],
-            "addresses": [],
-            "emailAddresses": [
-                {
-                    "id": 601602094,
-                    "type": null,
-                    "address": "sam@yopmail.com"
-                }
-            ],
-            "websites": []
-        },
-        {
-            "id": 270051501,
-            "owner": null,
-            "team": null,
-            "type": "organisation",
-            "about": null,
-            "name": "Capsule",
-            "createdAt": "2025-04-22T01:47:53Z",
-            "updatedAt": "2025-04-22T01:47:54Z",
-            "lastContactedAt": null,
-            "pictureURL": "https://capsule-pictures-prod.s3.amazonaws.com/6a991dea-8623-4cef-9f3f-b5ff25509d81?size=100&v=0",
-            "enrichment": null,
-            "phoneNumbers": [],
-            "addresses": [],
-            "emailAddresses": [
-                {
-                    "id": 601602095,
-                    "type": null,
-                    "address": "support@capsulecrm.com"
-                }
-            ],
-            "websites": [
-                {
-                    "id": 601602096,
-                    "type": null,
-                    "address": "capsulecrm",
-                    "service": "TWITTER",
-                    "url": "https://twitter.com/capsulecrm"
-                },
-                {
-                    "id": 601602097,
-                    "type": null,
-                    "address": "capsulecrm.com",
-                    "service": "URL",
-                    "url": "http://capsulecrm.com"
-                },
-                {
-                    "id": 601602098,
-                    "type": null,
-                    "address": "https://www.facebook.com/capsulecrm/",
-                    "service": "FACEBOOK",
-                    "url": "https://www.facebook.com/capsulecrm/"
-                },
-                {
-                    "id": 601602099,
-                    "type": null,
-                    "address": "https://www.youtube.com/user/CapsuleCRM",
-                    "service": "YOUTUBE",
-                    "url": "https://www.youtube.com/user/CapsuleCRM"
-                },
-                {
-                    "id": 601602100,
-                    "type": null,
-                    "address": "https://www.linkedin.com/company/capsulecrm/",
-                    "service": "LINKED_IN",
-                    "url": "https://www.linkedin.com/company/capsulecrm/"
-                }
-            ]
-        }
-    ],
     "capsulecrm": {
         "parties": [
             {
-                "id": 270130198,
+                "id": 270296108,
                 "owner": {
-                    "id": 679016,
+                    "id": 679385,
                     "deleted": false,
-                    "username": "samuel",
-                    "pictureURL": "https://facehub.appspot.com/default/person?text=SS&size=100&colour=2030325971",
-                    "name": "Sameul Si"
+                    "username": "sujish",
+                    "pictureURL": "https://facehub.appspot.com/default/person?text=SM&size=100&colour=2011976424",
+                    "name": "Sujish Maharjan"
                 },
                 "team": null,
                 "type": "person",
                 "about": null,
-                "firstName": "Sameul",
-                "lastName": "Si",
+                "firstName": "Sujish",
+                "lastName": "Maharjan",
                 "jobTitle": null,
-                "createdAt": "2025-04-23T01:39:53Z",
-                "updatedAt": "2025-04-23T01:39:53Z",
+                "createdAt": "2025-04-28T05:55:50Z",
+                "updatedAt": "2025-04-28T05:55:51Z",
                 "organisation": null,
                 "lastContactedAt": null,
-                "pictureURL": "https://facehub.appspot.com/default/person?text=SS&size=100&colour=2030325971",
+                "pictureURL": "https://facehub.appspot.com/default/person?text=SM&size=100&colour=2011976424",
                 "title": null,
-                "enrichment": null,
                 "phoneNumbers": [],
                 "addresses": [],
                 "emailAddresses": [
                     {
-                        "id": 601715317,
+                        "id": 602112411,
                         "type": null,
-                        "address": "samuel@yopmail.com"
+                        "address": "sujish@yopmail.com"
                     }
                 ],
-                "websites": []
+                "websites": [],
+                "enrichment": null
             },
             {
-                "id": 270130199,
+                "id": 270296109,
                 "owner": null,
                 "team": null,
                 "type": "organisation",
                 "about": null,
                 "name": "Capsule",
-                "createdAt": "2025-04-23T01:39:53Z",
-                "updatedAt": "2025-04-23T01:39:53Z",
+                "createdAt": "2025-04-28T05:55:51Z",
+                "updatedAt": "2025-04-28T05:55:51Z",
                 "lastContactedAt": null,
                 "pictureURL": "https://capsule-pictures-prod.s3.amazonaws.com/6a991dea-8623-4cef-9f3f-b5ff25509d81?size=100&v=0",
-                "enrichment": null,
                 "phoneNumbers": [],
                 "addresses": [],
                 "emailAddresses": [
                     {
-                        "id": 601715318,
+                        "id": 602112412,
                         "type": null,
                         "address": "support@capsulecrm.com"
                     }
                 ],
                 "websites": [
                     {
-                        "id": 601715319,
+                        "id": 602112413,
                         "type": null,
                         "address": "capsulecrm",
                         "service": "TWITTER",
                         "url": "https://twitter.com/capsulecrm"
                     },
                     {
-                        "id": 601715320,
+                        "id": 602112414,
                         "type": null,
                         "address": "capsulecrm.com",
                         "service": "URL",
                         "url": "http://capsulecrm.com"
                     },
                     {
-                        "id": 601715321,
+                        "id": 602112415,
                         "type": null,
                         "address": "https://www.facebook.com/capsulecrm/",
                         "service": "FACEBOOK",
                         "url": "https://www.facebook.com/capsulecrm/"
                     },
                     {
-                        "id": 601715322,
+                        "id": 602112416,
                         "type": null,
                         "address": "https://www.youtube.com/user/CapsuleCRM",
                         "service": "YOUTUBE",
                         "url": "https://www.youtube.com/user/CapsuleCRM"
                     },
                     {
-                        "id": 601715323,
+                        "id": 602112417,
                         "type": null,
                         "address": "https://www.linkedin.com/company/capsulecrm/",
                         "service": "LINKED_IN",
                         "url": "https://www.linkedin.com/company/capsulecrm/"
                     }
-                ]
+                ],
+                "enrichment": null
             }
         ]
+    },
+    "pipedrivecrm": {
+        "success": true,
+        "data": {
+            "id": 24271628,
+            "name": "Sujish",
+            "email": "sujishmaharjan@gmail.com",
+            "lang": 1,
+            "locale": "en_US",
+            "timezone_name": "Asia/Kathmandu",
+            "timezone_offset": "+05:45",
+            "default_currency": "USD",
+            "icon_url": null,
+            "active_flag": true,
+            "is_deleted": false,
+            "is_admin": 1,
+            "role_id": 1,
+            "created": "2025-04-28 02:47:35",
+            "has_created_company": true,
+            "is_you": true,
+            "access": [
+                {
+                    "app": "sales",
+                    "admin": true,
+                    "permission_set_id": "240e6ae0-23db-11f0-b206-7d4fdf8c8058"
+                },
+                {
+                    "app": "global",
+                    "admin": true,
+                    "permission_set_id": "24143740-23db-11f0-b206-7d4fdf8c8058"
+                },
+                {
+                    "app": "account_settings",
+                    "admin": true,
+                    "permission_set_id": "24187d00-23db-11f0-b206-7d4fdf8c8058"
+                }
+            ],
+            "company_id": 14630706,
+            "company_name": "Sujish - Sandbox",
+            "company_domain": "sujish-sandbox",
+            "company_country": "US",
+            "language": {
+                "language_code": "en",
+                "country_code": "US"
+            },
+            "phone": null,
+            "modified": "2025-04-28 02:51:53",
+            "last_login": "2025-04-28 02:51:53"
+        },
+        "additional_data": null
     }
 }

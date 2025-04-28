@@ -2,7 +2,12 @@ import asyncio
 from fastapi import APIRouter, Request
 from src.addons.integrations.plugins.capsule import *
 from src.core.dependencies import AnnotatedPm, AnnotatedClientId,AnnotatedSettings
-from src.modules.handlers import save_token_data, get_access_token_from_header,save_contacts
+from src.modules.handlers import (
+    save_token_data,
+    get_access_token_from_header,
+    save_contacts,
+    fetch_access_token_by_subdomain
+)
 from src.config.settings import AppSettings
 from src.modules.queries import read_json, write_json
 from src.core.exceptions import *
@@ -25,17 +30,13 @@ async def get_authorization_url(
 
 
 @router.get("/token/")
-async def get_users_token(
+async def get_users_token_resource(
     request: Request,
-    sub_domain: str,
+    crm_name:str,
+    sub_domain: str
 ):
-    print("token endpoint")
-    json_data = read_json("tokens.json")
-    data = json_data.get(sub_domain, None)
-    if not data:
-        raise InvalidUserException("Invalid User")
-
-    return {"access_token": data.get("access_token")}
+    access_token = fetch_access_token_by_subdomain(crm_name,sub_domain)
+    return {"access_token": access_token}
 
 
 @router.get("/contacts/")

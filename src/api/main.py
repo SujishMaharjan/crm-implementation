@@ -4,8 +4,8 @@ from src.addons.integrations.plugin_manager import init_plugin_manager
 from src.config.settings import AppSettings
 from src.api.entrypoints.routes import router
 from src.api.entrypoints.callbacks import router as callback_route
-from src.core.middlewares import ExceptionMiddleware
-from src.addons.integrations.plugins import capsule
+from src.core.middlewares import ExceptionMiddleware,CleanUpStatesMiddleware
+from src.addons.integrations.plugins import capsule,kommo,keap,pipedrive
 
 
 @asynccontextmanager
@@ -15,7 +15,10 @@ async def lifespan(app: FastAPI):
     app.state.pm = init_plugin_manager()
     #registering pluggins
     app.state.pm.register(capsule.CapsuleCrmPlugin())
-
+    # app.state.pm.register(kommo.KommoCrmPlugin())
+    # app.state.pm.register(keap.KeapCrmPlugin())
+    app.state.pm.register(pipedrive.PipedriveCrmPlugin())
+    
     app.state.settings = AppSettings()
     print(app.state.settings)
     yield
@@ -28,6 +31,7 @@ def init_app():
 
     # add_middlewares
     app.add_middleware(ExceptionMiddleware)
+    app.add_middleware(CleanUpStatesMiddleware)
     
     # add routes
     app.include_router(router)
@@ -39,11 +43,3 @@ def init_app():
 app = init_app()
 
 
-"""
-To do crm _implementation
-To crm capsule and copper
-use pluggy to get urls
-save token aswell contacts peoples from their crm in json
-frontent at localhost:3000
-
-"""
