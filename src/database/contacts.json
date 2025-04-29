@@ -97,52 +97,56 @@
     },
     "pipedrivecrm": {
         "success": true,
-        "data": {
-            "id": 24271628,
-            "name": "Sujish",
-            "email": "sujishmaharjan@gmail.com",
-            "lang": 1,
-            "locale": "en_US",
-            "timezone_name": "Asia/Kathmandu",
-            "timezone_offset": "+05:45",
-            "default_currency": "USD",
-            "icon_url": null,
-            "active_flag": true,
-            "is_deleted": false,
-            "is_admin": 1,
-            "role_id": 1,
-            "created": "2025-04-28 02:47:35",
-            "has_created_company": true,
-            "is_you": true,
-            "access": [
-                {
-                    "app": "sales",
-                    "admin": true,
-                    "permission_set_id": "240e6ae0-23db-11f0-b206-7d4fdf8c8058"
-                },
-                {
-                    "app": "global",
-                    "admin": true,
-                    "permission_set_id": "24143740-23db-11f0-b206-7d4fdf8c8058"
-                },
-                {
-                    "app": "account_settings",
-                    "admin": true,
-                    "permission_set_id": "24187d00-23db-11f0-b206-7d4fdf8c8058"
-                }
-            ],
-            "company_id": 14630706,
-            "company_name": "Sujish - Sandbox",
-            "company_domain": "sujish-sandbox",
-            "company_country": "US",
-            "language": {
-                "language_code": "en",
-                "country_code": "US"
+        "data": [
+            {
+                "id": 1,
+                "name": "samen",
+                "first_name": "samen",
+                "last_name": "",
+                "add_time": "2025-04-28T05:28:24Z",
+                "update_time": "2025-04-28T05:28:24Z",
+                "visible_to": 3,
+                "custom_fields": null,
+                "owner_id": 24271628,
+                "label_ids": [],
+                "org_id": null,
+                "is_deleted": false,
+                "picture_id": null,
+                "phones": [
+                    {
+                        "label": "work",
+                        "value": "9861234567",
+                        "primary": true
+                    }
+                ],
+                "emails": [
+                    {
+                        "label": "work",
+                        "value": "samen@xyz.com",
+                        "primary": true
+                    }
+                ]
             },
-            "phone": null,
-            "modified": "2025-04-28 02:51:53",
-            "last_login": "2025-04-28 02:51:53"
-        },
-        "additional_data": null
+            {
+                "id": 2,
+                "name": "Names",
+                "first_name": "Names",
+                "last_name": "",
+                "add_time": "2025-04-28T06:55:47Z",
+                "update_time": "2025-04-28T06:55:47Z",
+                "visible_to": 3,
+                "custom_fields": null,
+                "owner_id": 24271628,
+                "label_ids": [],
+                "org_id": 1,
+                "is_deleted": false,
+                "picture_id": null,
+                "phones": [],
+                "emails": []
+            }
+        ],
+        "additional_data": {
+            "next_cursor": null
+        }
     }
 }

@@ -7,7 +7,7 @@ hookspec = pluggy.HookspecMarker("CRMS")
 class CrmSpec:
 
     @hookspec
-    async def get_crm_authorization_url(self, name, settings: AppSettings): ...
+    async def get_crm_authorization_url(self,settings: AppSettings): ...
     """Returns authorization_code"""
 
     @hookspec

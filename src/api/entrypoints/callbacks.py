@@ -27,7 +27,7 @@ async def get_token_from_crm(
         settings=settings
 
     ) 
-    # return {"code": code}
+
     token_response = await asyncio.gather(*tasks)
     save_token_data("tokens.json",token_response)
 

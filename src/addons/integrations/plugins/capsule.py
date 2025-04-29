@@ -14,28 +14,29 @@ from src.modules.handlers import (
 )
 from src.config.settings import AppSettings
 from src.addons.integrations.plugins import hookimpl
-
+from src.api.entrypoints.models import CrmType
 
 
 
 class CapsuleCrmPlugin:
+    crm_name = CrmType.capsule
 
     @hookimpl
-    async def get_crm_authorization_url(self, name, settings: AppSettings):
-        if name == "capsulecrm" or name == None:
-            base_url = "https://api.capsulecrm.com/oauth/authorise"
-            state = generate_store_state()
-            params = {
-                "response_type": "code",
-                "client_id": settings.capsule.client_id,
-                "redirect_uri": f"http://localhost:8000/callbacks/integrations/capsulecrm",
-                "scope": "read write",
-                "state": state,
-            }
-            query_string = urlencode(params)
-            full_uri = f"{base_url}?{query_string}"
+    async def get_crm_authorization_url(self, settings: AppSettings):
+        
+        base_url = "https://api.capsulecrm.com/oauth/authorise"
+        state = generate_store_state()
+        params = {
+            "response_type": "code",
+            "client_id": settings.capsule.client_id,
+            "redirect_uri": f"http://localhost:8000/callbacks/integrations/capsulecrm",
+            "scope": "read write",
+            "state": state,
+        }
+        query_string = urlencode(params)
+        full_uri = f"{base_url}?{query_string}"
 
-            return {"capsulecrm": full_uri}
+        return {"capsulecrm": full_uri}
 
     @hookimpl
     async def get_access_token(self, name, code, state, settings: AppSettings):

@@ -5,7 +5,8 @@ from fastapi.responses import JSONResponse
 from src.core.exceptions import *
 from fastapi import Request
 from datetime import datetime, timedelta
-import random,string
+import random,string,pluggy
+
 
 
 def generate_store_state(expiry_minutes=5):
@@ -132,3 +133,19 @@ def fetch_access_token_by_subdomain(crm_name,sub_domain):
 
 
 
+def get_crm_names_list(pm: pluggy.PluginManager):
+    crm_names = [plugin.crm_name for plugin in pm.get_plugins()]
+    if not crm_names:
+        raise NotFoundException("No any Registerd Plugins")
+    return crm_names
+
+
+def check_valid_crm_names(name:list,crm_names:list):
+    invalid_names = set(name)-set(crm_names)
+    if invalid_names:
+        raise InvalidInputException(f"Invalid Crm names: {" ".join(invalid_names)}")
+    return True
+
+def get_remove_plugin_list(remove_list):
+
+    return 

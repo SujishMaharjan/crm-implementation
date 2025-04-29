@@ -11,7 +11,7 @@ def get_client_id(request: Request):
 def get_settings(request: Request):
     return request.app.state.settings
 
-
+# use meaning full name
 AnnotatedPm = Annotated[pluggy.PluginManager, Depends(get_plugin_manager)]
 AnnotatedClientId = Annotated[str, Depends(get_client_id)]
 AnnotatedSettings = Annotated[AppSettings, Depends(get_settings)]
