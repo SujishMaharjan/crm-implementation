@@ -14,7 +14,8 @@ from src.modules.handlers import (
 )
 from src.config.settings import AppSettings
 from src.addons.integrations.plugins import hookimpl
-from src.api.entrypoints.models import CrmType
+from src.api.entrypoints.models import CrmType,Contact
+
 
 
 
@@ -93,8 +94,10 @@ class PipedriveCrmPlugin:
             url=base_url
             async with httpx.AsyncClient() as client:
                 response = await client.get(url=url, headers=headers)
-
-                return {name:response.json()}
+                if response.status_code!=200:
+                    raise ImportErrorException("Error Occured while Importing contacts from Pipedrive Crm")
+                process_contacts = self.filter_crm_data(response.json())
+                return process_contacts
             
     @hookimpl
     async def regenerate_access_token(self, name, refresh_token, settings:AppSettings):
@@ -115,3 +118,20 @@ class PipedriveCrmPlugin:
             response = await client.post(token_url, data=data, headers=headers)
             response.raise_for_status()
             return response.json()
+        
+    @hookimpl
+    def filter_crm_data(self,datas:dict)-> list:
+        filtered_data= []
+        for data in datas["data"]:
+            contact=Contact(
+                name=data.get("name"),
+                first_name=data.get("first_name"),
+                last_name=data.get("last_name"),
+                crm = self.crm_name,
+                address=data.get("addresses",[]),
+                phone=[phone_dict["value"] for phone_dict in data["phones"]],
+                email=[email_dict["value"] for email_dict in data["emails"]]
+            )
+            filtered_data.append(contact.model_dump())
+            
+        return filtered_data

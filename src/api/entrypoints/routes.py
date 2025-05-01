@@ -1,7 +1,7 @@
 import asyncio
 from fastapi import APIRouter, Request, Query
 from src.addons.integrations.plugins.capsule import *
-from src.core.dependencies import AnnotatedPm, AnnotatedClientId, AnnotatedSettings
+from src.core.dependencies import AnnotatedPlugginManager, AnnotatedClientId, AnnotatedSettings
 from src.modules.handlers import (
     save_token_data,
     get_access_token_from_header,
@@ -9,7 +9,7 @@ from src.modules.handlers import (
     fetch_access_token_by_subdomain,
     get_crm_names_list,
     check_valid_crm_names,
-    get_remove_plugin_list
+    filter_duplicate_contacts
 )
 from src.config.settings import AppSettings
 from src.modules.queries import read_json, write_json
@@ -24,14 +24,15 @@ router = APIRouter(prefix="/intergrations", tags=["Integrations"])
 @router.get("/")
 async def get_authorization_url(
     request: Request,
-    pm: AnnotatedPm,
+    pm: AnnotatedPlugginManager,
     settings: AnnotatedSettings,
     name: list[CrmType] = Query(default=None),
 ):
     if not name:
         tasks = pm.hook.get_crm_authorization_url(settings=settings)
     else:
-        check_valid_crm_names(name, crm_names := get_crm_names_list(pm))
+        # check_valid_crm_names(name, crm_names := get_crm_names_list(pm))
+        crm_names= get_crm_names_list(pm)
         remove_plugins_list=list(set(crm_names) - set(name))
         subset_hook = pm.subset_hook_caller(
             name="get_crm_authorization_url",
@@ -54,7 +55,7 @@ async def get_users_token_resource(request: Request, crm_name: str, sub_domain: 
 @router.get("/contacts/")
 async def get_contact_resource(
     request: Request,
-    pm: AnnotatedPm,
+    pm: AnnotatedPlugginManager,
     settings: AnnotatedSettings,
     name: str,
     page: int,
@@ -68,7 +69,10 @@ async def get_contact_resource(
         page=page,
         perPage=perPage,
     )
-    contacts = await asyncio.gather(*tasks)
-
-    save_contacts("contacts.json", contacts)
-    return contacts
+    new_contacts_response = await asyncio.gather(*tasks)
+    new_contacts =[contact for group in new_contacts_response if group !=None for contact in group]
+    exiting_contacts = read_json("contacts.json")
+    contacts_to_save = filter_duplicate_contacts(new_contacts,exiting_contacts)
+    breakpoint()
+    save_contacts("contacts.json", contacts_to_save)
+    return {"Message":"Import Contact Successful"}

@@ -1,152 +1,69 @@
-{
-    "capsulecrm": {
-        "parties": [
-            {
-                "id": 270296108,
-                "owner": {
-                    "id": 679385,
-                    "deleted": false,
-                    "username": "sujish",
-                    "pictureURL": "https://facehub.appspot.com/default/person?text=SM&size=100&colour=2011976424",
-                    "name": "Sujish Maharjan"
-                },
-                "team": null,
-                "type": "person",
-                "about": null,
-                "firstName": "Sujish",
-                "lastName": "Maharjan",
-                "jobTitle": null,
-                "createdAt": "2025-04-28T05:55:50Z",
-                "updatedAt": "2025-04-28T05:55:51Z",
-                "organisation": null,
-                "lastContactedAt": null,
-                "pictureURL": "https://facehub.appspot.com/default/person?text=SM&size=100&colour=2011976424",
-                "title": null,
-                "phoneNumbers": [],
-                "addresses": [],
-                "emailAddresses": [
-                    {
-                        "id": 602112411,
-                        "type": null,
-                        "address": "sujish@yopmail.com"
-                    }
-                ],
-                "websites": [],
-                "enrichment": null
-            },
-            {
-                "id": 270296109,
-                "owner": null,
-                "team": null,
-                "type": "organisation",
-                "about": null,
-                "name": "Capsule",
-                "createdAt": "2025-04-28T05:55:51Z",
-                "updatedAt": "2025-04-28T05:55:51Z",
-                "lastContactedAt": null,
-                "pictureURL": "https://capsule-pictures-prod.s3.amazonaws.com/6a991dea-8623-4cef-9f3f-b5ff25509d81?size=100&v=0",
-                "phoneNumbers": [],
-                "addresses": [],
-                "emailAddresses": [
-                    {
-                        "id": 602112412,
-                        "type": null,
-                        "address": "support@capsulecrm.com"
-                    }
-                ],
-                "websites": [
-                    {
-                        "id": 602112413,
-                        "type": null,
-                        "address": "capsulecrm",
-                        "service": "TWITTER",
-                        "url": "https://twitter.com/capsulecrm"
-                    },
-                    {
-                        "id": 602112414,
-                        "type": null,
-                        "address": "capsulecrm.com",
-                        "service": "URL",
-                        "url": "http://capsulecrm.com"
-                    },
-                    {
-                        "id": 602112415,
-                        "type": null,
-                        "address": "https://www.facebook.com/capsulecrm/",
-                        "service": "FACEBOOK",
-                        "url": "https://www.facebook.com/capsulecrm/"
-                    },
-                    {
-                        "id": 602112416,
-                        "type": null,
-                        "address": "https://www.youtube.com/user/CapsuleCRM",
-                        "service": "YOUTUBE",
-                        "url": "https://www.youtube.com/user/CapsuleCRM"
-                    },
-                    {
-                        "id": 602112417,
-                        "type": null,
-                        "address": "https://www.linkedin.com/company/capsulecrm/",
-                        "service": "LINKED_IN",
-                        "url": "https://www.linkedin.com/company/capsulecrm/"
-                    }
-                ],
-                "enrichment": null
-            }
-        ]
-    },
-    "pipedrivecrm": {
-        "success": true,
-        "data": [
-            {
-                "id": 1,
-                "name": "samen",
-                "first_name": "samen",
-                "last_name": "",
-                "add_time": "2025-04-28T05:28:24Z",
-                "update_time": "2025-04-28T05:28:24Z",
-                "visible_to": 3,
-                "custom_fields": null,
-                "owner_id": 24271628,
-                "label_ids": [],
-                "org_id": null,
-                "is_deleted": false,
-                "picture_id": null,
-                "phones": [
-                    {
-                        "label": "work",
-                        "value": "9861234567",
-                        "primary": true
-                    }
-                ],
-                "emails": [
-                    {
-                        "label": "work",
-                        "value": "samen@xyz.com",
-                        "primary": true
-                    }
-                ]
-            },
-            {
-                "id": 2,
-                "name": "Names",
-                "first_name": "Names",
-                "last_name": "",
-                "add_time": "2025-04-28T06:55:47Z",
-                "update_time": "2025-04-28T06:55:47Z",
-                "visible_to": 3,
-                "custom_fields": null,
-                "owner_id": 24271628,
-                "label_ids": [],
-                "org_id": 1,
-                "is_deleted": false,
-                "picture_id": null,
-                "phones": [],
-                "emails": []
-            }
+[
+    {
+        "name": "Ram Hari",
+        "first_name": "Ram",
+        "last_name": "Hari",
+        "crm": "capsule",
+        "address": [
+            "Nepal",
+            "KTM"
         ],
-        "additional_data": {
-            "next_cursor": null
-        }
+        "phone": [
+            9860111222,
+            9860111333
+        ],
+        "email": [
+            "ram@xyz.com",
+            "Hari@xyz.com"
+        ],
+        "company": null
+    },
+    {
+        "name": "samen",
+        "first_name": "samen",
+        "last_name": "",
+        "crm": "pipedrive",
+        "address": [],
+        "phone": [
+            "9861234567"
+        ],
+        "email": [
+            "samen@xyz.com"
+        ],
+        "company": null
+    },
+    {
+        "name": "Names",
+        "first_name": "Names",
+        "last_name": "",
+        "crm": "pipedrive",
+        "address": [],
+        "phone": [],
+        "email": [],
+        "company": null
+    },
+    {
+        "name": "Sujish Maharjan",
+        "first_name": "Sujish",
+        "last_name": "Sujish",
+        "crm": "capsule",
+        "address": [],
+        "phone": [],
+        "email": [
+            "codavatar@yopmail.com"
+        ],
+        "company": ""
+    },
+    {
+        "name": "",
+        "first_name": "Sam",
+        "last_name": "Sam",
+        "crm": "capsule",
+        "address": [],
+        "phone": [],
+        "email": [
+            "sam@xyz.com"
+        ],
+        "company": ""
     }
-}
+]

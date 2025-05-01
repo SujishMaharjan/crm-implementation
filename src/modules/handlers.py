@@ -71,14 +71,7 @@ def save_token_data(filename,datas):
 #     return True
 
 
-def save_contacts(filename, datas):
-    json_db_data = read_json(filename)
-    for data in datas:
-        if data is None:
-            continue
-        json_db_data.update(data)
-    write_json(filename, json_db_data)
-    return True
+
 # def save_contacts(filename, datas):
 #     json_db_data = read_json(filename)
 #     for data in datas:
@@ -146,6 +139,30 @@ def check_valid_crm_names(name:list,crm_names:list):
         raise InvalidInputException(f"Invalid Crm names: {" ".join(invalid_names)}")
     return True
 
-def get_remove_plugin_list(remove_list):
+def is_duplicate_contact(new_contact,existing_contacts:list)-> bool:
+    new_name = new_contact.get("name").lower()
+    new_emails = set(email.strip().lower() for email in new_contact.get("email", []))
+    new_phones = set(str(p) for p in new_contact.get("phone", []))  # Normalize as string
+    for contact in existing_contacts:
+        existing_name = contact.get("name").lower()
+        existing_emails = set(email.strip().lower() for email in contact.get("email", []))
+        existing_phones = set(str(p) for p in contact.get("phone", []))
 
-    return 
+        if new_name == existing_name and (new_emails & existing_emails or new_phones & existing_phones):
+            return True
+    return False
+
+def filter_duplicate_contacts(new_contacts:list,existing_contacts:list)->list:
+    
+    non_duplicates = []
+    for contact in new_contacts:
+        if not is_duplicate_contact(contact, existing_contacts):
+            non_duplicates.append(contact)
+    return non_duplicates
+    
+
+def save_contacts(filename, contacts_to_save):
+    existing_contacts = read_json(filename)
+    existing_contacts+=contacts_to_save
+    write_json(filename, existing_contacts)
+    return True

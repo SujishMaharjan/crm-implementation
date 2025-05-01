@@ -18,3 +18,6 @@ class CrmSpec:
 
     @hookspec
     async def regenerate_access_token(self, name, refresh_token, settings:AppSettings): ...
+
+    @hookspec
+    def filter_crm_data(self, datas:dict): ...

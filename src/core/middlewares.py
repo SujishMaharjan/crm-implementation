@@ -21,6 +21,8 @@ class ExceptionMiddleware(BaseHTTPMiddleware):
             return JSONResponse(status_code=401, content={"detail": str(e)})
         except InvalidTokenException as e:
             return JSONResponse(status_code=401, content={"detail": str(e)})
+        except ImportErrorException as e:
+            return JSONResponse(status_code=400, content={"detail": str(e)})
         
 
 class CleanUpStatesMiddleware(BaseHTTPMiddleware):
