@@ -14,28 +14,29 @@ from src.modules.handlers import (
 )
 from src.config.settings import AppSettings
 from src.addons.integrations.plugins import hookimpl
-
+from src.api.entrypoints.models import CrmType,Contact
 
 
 
 class CapsuleCrmPlugin:
+    crm_name = CrmType.capsule
 
     @hookimpl
-    async def get_crm_authorization_url(self, name, settings: AppSettings):
-        if name == "capsulecrm" or name == None:
-            base_url = "https://api.capsulecrm.com/oauth/authorise"
-            state = generate_store_state()
-            params = {
-                "response_type": "code",
-                "client_id": settings.capsule.client_id,
-                "redirect_uri": f"http://localhost:8000/callbacks/integrations/capsulecrm",
-                "scope": "read write",
-                "state": state,
-            }
-            query_string = urlencode(params)
-            full_uri = f"{base_url}?{query_string}"
+    async def get_crm_authorization_url(self, settings: AppSettings):
+        
+        base_url = "https://api.capsulecrm.com/oauth/authorise"
+        state = generate_store_state()
+        params = {
+            "response_type": "code",
+            "client_id": settings.capsule.client_id,
+            "redirect_uri": f"http://localhost:8000/callbacks/integrations/capsulecrm",
+            "scope": "read write",
+            "state": state,
+        }
+        query_string = urlencode(params)
+        full_uri = f"{base_url}?{query_string}"
 
-            return {"capsulecrm": full_uri}
+        return {"capsulecrm": full_uri}
 
     @hookimpl
     async def get_access_token(self, name, code, state, settings: AppSettings):
@@ -86,8 +87,13 @@ class CapsuleCrmPlugin:
             url = f"{base_url}?{urlencode(params)}"
 
             async with httpx.AsyncClient() as client:
+                
                 response = await client.get(url=url, headers=headers)
-                return {name:response.json()}
+                if response.status_code!=200:
+                    raise ImportErrorException("Error Occured while importing contacts from capsulecrm")
+                cleaned_crm_data = self.filter_crm_data(response.json())
+                
+                return cleaned_crm_data
 
     @hookimpl
     async def regenerate_access_token(self, name, refresh_token, settings:AppSettings):
@@ -105,3 +111,26 @@ class CapsuleCrmPlugin:
             response = await client.post(token_url, data=data, headers=headers)
             response.raise_for_status()
             return response.json()
+        
+    @hookimpl
+    def filter_crm_data(self, datas:dict)->list:
+        
+        filtered_data = []
+        for party in datas["parties"]:
+            if party["type"]=="organisation":
+                continue
+
+            contact=Contact(
+                name=(party.get("owner") or {}).get("name",""),
+                first_name=party.get("firstName",""),
+                last_name=party.get("firstName",""),
+                crm = self.crm_name,
+                address=party.get("addresses",[]),
+                phone=party.get("PhoneNumbers",[]),
+                email=[email["address"] for email in party["emailAddresses"]],
+                company =party.get("organisations","")
+            )
+            filtered_data.append(contact.model_dump())
+        return filtered_data
+
+

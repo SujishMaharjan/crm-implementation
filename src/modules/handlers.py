@@ -5,7 +5,8 @@ from fastapi.responses import JSONResponse
 from src.core.exceptions import *
 from fastapi import Request
 from datetime import datetime, timedelta
-import random,string
+import random,string,pluggy
+
 
 
 def generate_store_state(expiry_minutes=5):
@@ -70,14 +71,7 @@ def save_token_data(filename,datas):
 #     return True
 
 
-def save_contacts(filename, datas):
-    json_db_data = read_json(filename)
-    for data in datas:
-        if data is None:
-            continue
-        json_db_data.update(data)
-    write_json(filename, json_db_data)
-    return True
+
 # def save_contacts(filename, datas):
 #     json_db_data = read_json(filename)
 #     for data in datas:
@@ -132,3 +126,43 @@ def fetch_access_token_by_subdomain(crm_name,sub_domain):
 
 
 
+def get_crm_names_list(pm: pluggy.PluginManager):
+    crm_names = [plugin.crm_name for plugin in pm.get_plugins()]
+    if not crm_names:
+        raise NotFoundException("No any Registerd Plugins")
+    return crm_names
+
+
+def check_valid_crm_names(name:list,crm_names:list):
+    invalid_names = set(name)-set(crm_names)
+    if invalid_names:
+        raise InvalidInputException(f"Invalid Crm names: {" ".join(invalid_names)}")
+    return True
+
+def is_duplicate_contact(new_contact,existing_contacts:list)-> bool:
+    new_name = new_contact.get("name").lower()
+    new_emails = set(email.strip().lower() for email in new_contact.get("email", []))
+    new_phones = set(str(p) for p in new_contact.get("phone", []))  # Normalize as string
+    for contact in existing_contacts:
+        existing_name = contact.get("name").lower()
+        existing_emails = set(email.strip().lower() for email in contact.get("email", []))
+        existing_phones = set(str(p) for p in contact.get("phone", []))
+
+        if new_name == existing_name and (new_emails & existing_emails or new_phones & existing_phones):
+            return True
+    return False
+
+def filter_duplicate_contacts(new_contacts:list,existing_contacts:list)->list:
+    
+    non_duplicates = []
+    for contact in new_contacts:
+        if not is_duplicate_contact(contact, existing_contacts):
+            non_duplicates.append(contact)
+    return non_duplicates
+    
+
+def save_contacts(filename, contacts_to_save):
+    existing_contacts = read_json(filename)
+    existing_contacts+=contacts_to_save
+    write_json(filename, existing_contacts)
+    return True

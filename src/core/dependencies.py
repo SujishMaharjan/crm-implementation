@@ -1,7 +1,6 @@
 from fastapi import Depends, Request
 from typing import Annotated
 import pluggy
-from src.core.utils import get_plugin_manager
 from src.config.settings import AppSettings
 
 
@@ -11,7 +10,11 @@ def get_client_id(request: Request):
 def get_settings(request: Request):
     return request.app.state.settings
 
+def get_plugin_manager(request: Request):
+    return request.app.state.pm
 
-AnnotatedPm = Annotated[pluggy.PluginManager, Depends(get_plugin_manager)]
+
+# use meaning full name
+AnnotatedPlugginManager = Annotated[pluggy.PluginManager, Depends(get_plugin_manager)]
 AnnotatedClientId = Annotated[str, Depends(get_client_id)]
 AnnotatedSettings = Annotated[AppSettings, Depends(get_settings)]

@@ -14,26 +14,28 @@ from src.modules.handlers import (
 )
 from src.config.settings import AppSettings
 from src.addons.integrations.plugins import hookimpl
+from src.api.entrypoints.models import CrmType,Contact
+
 
 
 
 
 class PipedriveCrmPlugin:
+    crm_name = CrmType.pipedrive
 
     @hookimpl
-    async def get_crm_authorization_url(self, name, settings: AppSettings):
-        if name == "pipedrivecrm" or name == None:
-            base_url = "https://oauth.pipedrive.com/oauth/authorize"
-            state = generate_store_state()
-            params = {
-                "client_id": settings.pipedrive.client_id,
-                "redirect_uri": f"http://localhost:8000/callbacks/integrations/pipedrivecrm",
-                "state": state,
-            }
-            query_string = urlencode(params)
-            full_uri = f"{base_url}?{query_string}"
+    async def get_crm_authorization_url(self,settings: AppSettings):
+        base_url = "https://oauth.pipedrive.com/oauth/authorize"
+        state = generate_store_state()
+        params = {
+            "client_id": settings.pipedrive.client_id,
+            "redirect_uri": f"http://localhost:8000/callbacks/integrations/pipedrivecrm",
+            "state": state,
+        }
+        query_string = urlencode(params)
+        full_uri = f"{base_url}?{query_string}"
 
-            return {"pipedrivecrm": full_uri}
+        return {"pipedrivecrm": full_uri}
         
     @hookimpl
     async def get_access_token(self, name, code, state, settings: AppSettings):
@@ -85,13 +87,17 @@ class PipedriveCrmPlugin:
                 access_token = access_token_data[0].get("access_token")
 
             headers = {"Authorization": f"Bearer {access_token}"}
-            base_url = "https://sujish-sandbox.pipedrive.com/users/me"
-            params = {"page": page, "perPage": perPage}
-            url = f"{base_url}?{urlencode(params)}"
+            # base_url = "https://sujish-sandbox.pipedrive.com/users/me"
+            base_url = "https://api.pipedrive.com/api/v2/persons"
+            # params = {"page": page, "perPage": perPage}
+            # url = f"{base_url}?{urlencode(params)}"
+            url=base_url
             async with httpx.AsyncClient() as client:
                 response = await client.get(url=url, headers=headers)
-
-                return {name:response.json()}
+                if response.status_code!=200:
+                    raise ImportErrorException("Error Occured while Importing contacts from Pipedrive Crm")
+                process_contacts = self.filter_crm_data(response.json())
+                return process_contacts
             
     @hookimpl
     async def regenerate_access_token(self, name, refresh_token, settings:AppSettings):
@@ -112,3 +118,20 @@ class PipedriveCrmPlugin:
             response = await client.post(token_url, data=data, headers=headers)
             response.raise_for_status()
             return response.json()
+        
+    @hookimpl
+    def filter_crm_data(self,datas:dict)-> list:
+        filtered_data= []
+        for data in datas["data"]:
+            contact=Contact(
+                name=data.get("name"),
+                first_name=data.get("first_name"),
+                last_name=data.get("last_name"),
+                crm = self.crm_name,
+                address=data.get("addresses",[]),
+                phone=[phone_dict["value"] for phone_dict in data["phones"]],
+                email=[email_dict["value"] for email_dict in data["emails"]]
+            )
+            filtered_data.append(contact.model_dump())
+            
+        return filtered_data
